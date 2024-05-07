@@ -6,14 +6,13 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    profiles: ["core", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
       - default
     # ports:
     #   - "9091:9091"
     volumes:
-      - $DOCKERDIR/appdata/authelia:/config
+      - $APPDATADIR/authelia:/config
     environment:
       - TZ=$TZ
       - AUTHELIA_JWT_SECRET_FILE=/run/secrets/authelia_jwt_secret
@@ -27,7 +26,7 @@ services:
       - "traefik.enable=true"
       ## HTTP Routers
       - "traefik.http.routers.authelia-rtr.entrypoints=websecure"
-      - "traefik.http.routers.authelia-rtr.rule=Host(`authelia.$DOMAINNAME_HS`)"
+      - "traefik.http.routers.authelia-rtr.rule=Host(`authelia.$DOMAINNAME_DMS`)"
       ## Middlewares
       - "traefik.http.routers.authelia-rtr.middlewares=chain-no-auth@file"
       ## HTTP Services

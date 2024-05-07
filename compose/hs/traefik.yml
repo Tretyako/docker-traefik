@@ -6,9 +6,8 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    profiles: ["core", "all"]
     networks:
-      t3_proxy:
+      t_proxy:
         ipv4_address: 192.168.90.254 # You can specify a static IP
       socket_proxy:
     command: # CLI arguments
@@ -46,8 +45,8 @@ services:
       - --entrypoints.websecure.http.tls.options=tls-opts@file
       # Add dns-cloudflare as default certresolver for all services. Also enables TLS and no need to specify on individual services
       - --entrypoints.websecure.http.tls.certresolver=dns-cloudflare
-      - --entrypoints.websecure.http.tls.domains[0].main=$DOMAINNAME_HS
-      - --entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAINNAME_HS
+      - --entrypoints.websecure.http.tls.domains[0].main=$DOMAINNAME_DMS
+      - --entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAINNAME_DMS
       # - --entrypoints.websecure.http.tls.domains[1].main=$DOMAINNAME_2 # Pulls main cert for second domain
       # - --entrypoints.websecure.http.tls.domains[1].sans=*.$DOMAINNAME_2 # Pulls wildcard cert for second domain
       - --providers.file.directory=/rules # Load dynamic configuration from one or more .toml or .yml files in a directory
@@ -90,10 +89,10 @@ services:
       #   protocol: tcp
       #   mode: host
     volumes:
-      - $DOCKERDIR/appdata/traefik3/rules/$HOSTNAME:/rules # Dynamic File Provider directory
+      - $APPDATADIR/traefik/rules:/rules # Dynamic File Provider directory
       # - /var/run/docker.sock:/var/run/docker.sock:ro # Enable if not using Socket Proxy
-      - $DOCKERDIR/appdata/traefik3/acme/acme.json:/acme.json # Certs File 
-      - $DOCKERDIR/logs/$HOSTNAME/traefik:/logs # Traefik logs
+      - $APPDATADIR/traefik/acme/acme.json:/acme.json # Certs File 
+      - $LOGSDIR/traefik:/logs # Traefik logs
     environment:
       - TZ=$TZ
       - CF_DNS_API_TOKEN_FILE=/run/secrets/cf_dns_api_token    

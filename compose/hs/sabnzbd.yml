@@ -8,9 +8,8 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    profiles: ["apps", "downloads", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
     ports:
       - "8084:8080"
     volumes:

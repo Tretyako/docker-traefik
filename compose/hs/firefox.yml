@@ -8,13 +8,12 @@ services:
       - no-new-privileges:true
       - seccomp:unconfined # October 15, 2020 https://github.com/jlesage/docker-firefox/blob/master/README.md#allowing-the-membarrier-system-call
     restart: unless-stopped
-    profiles: ["apps", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
     # ports:
     #   - "$FIREFOX_PORT:5800"
     volumes:
-      - $DOCKERDIR/appdata/firefox:/config
+      - $APPDATADIR/firefox:/config
       - $DATADIR/downloads:/data/downloads
       - /dev/shm:/dev/shm
     environment:
@@ -31,7 +30,7 @@ services:
       - "traefik.enable=true"
       # HTTP Routers
       - "traefik.http.routers.firefox-rtr.entrypoints=websecure"
-      - "traefik.http.routers.firefox-rtr.rule=Host(`firefox.$DOMAINNAME_HS`)"
+      - "traefik.http.routers.firefox-rtr.rule=Host(`firefox.$DOMAINNAME_DMS`)"
       # Middlewares
       - "traefik.http.routers.firefox-rtr.middlewares=chain-oauth@file"
       # HTTP Services

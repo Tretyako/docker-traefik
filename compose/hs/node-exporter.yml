@@ -6,9 +6,8 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    profiles: ["monitoring", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
     ports:
       - "9100:9100"
     volumes:

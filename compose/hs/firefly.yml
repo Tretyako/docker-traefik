@@ -6,19 +6,18 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    profiles: ["apps", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
     ports:
       - 8088:8080
     volumes:
-      - $DOCKERDIR/appdata/firefly:/var/www/html/storage/upload
-    env_file: $DOCKERDIR/appdata/firefly/firefly.env
+      - $APPDATADIR/firefly:/var/www/html/storage/upload
+    env_file: $APPDATADIR/firefly/firefly.env
     labels:
       - "traefik.enable=true"
       # HTTP Routers
       - "traefik.http.routers.firefly-rtr.entrypoints=websecure"
-      - "traefik.http.routers.firefly-rtr.rule=Host(`firefly.$DOMAINNAME_HS`)"
+      - "traefik.http.routers.firefly-rtr.rule=Host(`firefly.$DOMAINNAME_DMS`)"
       # Middlewares
       - "traefik.http.routers.firefly-rtr.middlewares=chain-oauth@file"
       # HTTP Services
@@ -31,19 +30,18 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    profiles: ["apps", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
     ports:
       - '8089:8080'
     depends_on:
       - firefly
-    env_file: $DOCKERDIR/appdata/firefly/importer.env
+    env_file: $APPDATADIR/firefly/importer.env
     labels:
       - "traefik.enable=true"
       # HTTP Routers
       - "traefik.http.routers.firefly-importer-rtr.entrypoints=websecure"
-      - "traefik.http.routers.firefly-importer-rtr.rule=Host(`importer.$DOMAINNAME_HS`)"
+      - "traefik.http.routers.firefly-importer-rtr.rule=Host(`importer.$DOMAINNAME_DMS`)"
       # Middlewares
       - "traefik.http.routers.firefly-importer-rtr.middlewares=chain-oauth@file"
       # HTTP Services

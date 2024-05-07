@@ -12,15 +12,14 @@ services:
       - NET_ADMIN
       - SYS_ADMIN
     restart: unless-stopped
-    profiles: ["apps", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
     ports:
       - 3001:3000
       - 4443:443
     volumes:
-      - $DOCKERDIR/appdata/kasm/data:/opt
-      - $DOCKERDIR/appdata/kasm/profiles:/profiles #optional
+      - $APPDATADIR/kasm/data:/opt
+      - $APPDATADIR/kasm/profiles:/profiles #optional
       - /dev/input:/dev/input #optional
       - /run/udev/data:/run/udev/data #optional
     environment:
@@ -33,7 +32,7 @@ services:
       - "traefik.enable=true"
       # HTTP Routers
       - "traefik.http.routers.kasm-rtr.entrypoints=websecure"
-      - "traefik.http.routers.kasm-rtr.rule=Host(`kasm.$DOMAINNAME_HS`)"
+      - "traefik.http.routers.kasm-rtr.rule=Host(`kasm.$DOMAINNAME_DMS`)"
       # Middlewares
       - "traefik.http.routers.kasm-rtr.middlewares=chain-oauth@file"
       # HTTP Services

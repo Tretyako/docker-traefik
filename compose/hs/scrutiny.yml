@@ -5,18 +5,17 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    profiles: ["core", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
     ports:
       - 8090:8080
     volumes:
-      - $DOCKERDIR/appdata/scrutiny:/opt/scrutiny/config
+      - $APPDATADIR/scrutiny:/opt/scrutiny/config
     labels:
       - "traefik.enable=true"
       # HTTP Routers
       - "traefik.http.routers.scrutiny-rtr.entrypoints=websecure"
-      - "traefik.http.routers.scrutiny-rtr.rule=Host(`scrutiny.$DOMAINNAME_HS`)"
+      - "traefik.http.routers.scrutiny-rtr.rule=Host(`scrutiny.$DOMAINNAME_HDMS`)"
       # Middlewares
       - "traefik.http.routers.scrutiny-rtr.middlewares=chain-oauth@file"
       # HTTP Services

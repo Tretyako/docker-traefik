@@ -6,9 +6,8 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    profiles: ["apps", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
       - socket_proxy
     ports:
       - "8082:8080"
@@ -24,9 +23,15 @@ services:
       - "traefik.enable=true"
       # HTTP Routers
       - "traefik.http.routers.dozzle-rtr.entrypoints=websecure"
-      - "traefik.http.routers.dozzle-rtr.rule=Host(`dozzle.$DOMAINNAME_HS`)"
+      - "traefik.http.routers.dozzle-rtr.rule=Host(`dozzle.$DOMAINNAME_DMS`)"
       # Middlewares
       - "traefik.http.routers.dozzle-rtr.middlewares=chain-oauth@file"
       # HTTP Services
       - "traefik.http.routers.dozzle-rtr.service=dozzle-svc"
       - "traefik.http.services.dozzle-svc.loadbalancer.server.port=8080"
+      # Homepage
+      - homepage.group=System
+      - homepage.name=Dozzle
+      - homepage.icon=dozzle.png
+      - homepage.href=http://dozzle.$DOMAINNAME_DMS/
+      - homepage.description=System logs

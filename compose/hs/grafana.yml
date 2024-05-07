@@ -6,21 +6,20 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    profiles: ["apps", "all"]
     networks:
-      - t3_proxy
+      - t_proxy
     ports:
       - "3000:3000"
     user: "$PUID:$PGID"
     volumes:
-      - $DOCKERDIR/appdata/grafana:/var/lib/grafana
+      - $APPDATADIR/grafana:/var/lib/grafana
     environment:
       GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource,grafana-worldmap-panel,grafana-piechart-panel"
     labels:
       - "traefik.enable=true"
       # HTTP Routers
       - "traefik.http.routers.grafana-rtr.entrypoints=websecure"
-      - "traefik.http.routers.grafana-rtr.rule=Host(`grafana.$DOMAINNAME_HS`)"
+      - "traefik.http.routers.grafana-rtr.rule=Host(`grafana.$DOMAINNAME_DMS`)"
       # Middlewares
       - "traefik.http.routers.grafana-rtr.middlewares=chain-oauth@file"
       # HTTP Services
